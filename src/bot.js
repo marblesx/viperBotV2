@@ -4,7 +4,7 @@ const { readFileSync } = require('fs');
 const { join } = require('path');
 
 
-const auth = JSON.parse(readFileSync(join(__dirname, 'auth.json')));
+const auth = JSON.parse(readFileSync(join(__dirname, '../auth.json')));
 const token = auth.token;
 
 const client = new Client({
