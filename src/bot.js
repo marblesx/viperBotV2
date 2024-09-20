@@ -1,11 +1,10 @@
-const { Client, GatewayIntentBits, Events } = require('discord.js');
-const fetch = require('node-fetch'); 
+import { Client, GatewayIntentBits, Events, EmbedBuilder } from 'discord.js';
+import fetch from 'node-fetch'; // Updated import
 
-const { readFileSync } = require('fs');
-const { join } = require('path');
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
-
-const auth = JSON.parse(readFileSync(join(__dirname, '../auth.json')));
+const auth = JSON.parse(readFileSync(join(process.cwd(), 'auth.json'))); 
 const token = auth.token;
 
 const client = new Client({
@@ -68,8 +67,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
         const resultStr = results.join(', ');
         await interaction.reply(`Rolling ${numDice} d${numSides}... Results: ${resultStr}. Total: ${total}`);
-    }
-    else  if (commandName === 'play') {
+    } else if (commandName === 'play') {
         const userChoice = options.getString('choice');
         const choices = ['rock', 'paper', 'scissors'];
         const botChoice = choices[Math.floor(Math.random() * choices.length)];
@@ -89,7 +87,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
 
         await interaction.reply(`Rock, paper, scissors, shoot! You chose **${userChoice}**. I chose **${botChoice}**. ${result}`);
-    } else   if (commandName === '8ball') {
+    } else if (commandName === '8ball') {
         const question = options.getString('question');
         
         if (!question) {
@@ -98,28 +96,33 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
 
         await interaction.reply(`🎱 Question: ${question}\nAnswer: ${eightballPhrases[Math.floor(Math.random() * eightballPhrases.length)]}`);
-    } else if (commandName === 'dnd_monster'){
-        const monsterResponse = await fetch('https://www.dnd5eapi.com/api/monsters');
+    } else if (commandName === 'dnd_monster') {
+        const monsterResponse = await fetch('https://www.dnd5eapi.co/api/monsters');
         if (!monsterResponse.ok) {
-            return message.channel.send('Monster hunter is down.');
+            return interaction.reply('Monster hunter is down.'); // Changed from message to interaction
         }
         const data = await monsterResponse.json();
         
         const monster = data.results[Math.floor(Math.random() * data.count)];
-        const monsterData = await fetch(`https://www.dnd5eapi.com${monster.url}`);
-        if (!monsterData.ok) {
-            return message.channel.send('Monster hunter is down.');
+        const monsterDataResponse = await fetch(`https://www.dnd5eapi.co${monster.url}`);
+        if (!monsterDataResponse.ok) {
+            return interaction.reply('Monster hunter is down.'); // Changed from message to interaction
         }
-        const embed = new MessageEmbed()
-                .setColor('#FF0000') // Choose an appropriate color
-                .setTitle(monsterData.name)
-                .setDescription(`*${monsterData.size} ${monsterData.type} (${monsterData.alignment})*`)
-                .addField('Armor Class', monsterData.armor_class[0].value, true)
-                .addField('Hit Points',monsterData.hit_points, true)
-                .setImage(`https://www.dnd5eapi.com${monsterData.url}`)
-                .setURL(infoUrl)
-                .setFooter('More Info');
-        message.channel.send({ embeds: [embed] });
+
+        const monsterData = await monsterDataResponse.json();
+        const embed = new EmbedBuilder()
+        .setColor('#FF0000') // Choose an appropriate color
+        .setTitle(monsterData.name)
+        .setDescription(`*${monsterData.size} ${monsterData.type} (${monsterData.alignment})*`)
+        .addFields(
+            { name: 'Armor Class', value: monsterData.armor_class[0].value.toString(), inline: true },
+            { name: 'Hit Points', value: monsterData.hit_points.toString(), inline: true }
+        )
+        .setImage(`https://www.dnd5eapi.com${monsterData.image}`)
+        .setURL(`https://www.dnd5eapi.com${monster.url}`)
+        .setFooter({ text: 'More Info' });
+
+    await interaction.reply({ embeds: [embed] });
     }
 });
 

@@ -1,14 +1,12 @@
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v10');
-const { readFileSync } = require('fs');
-const { join } = require('path');
+import { REST } from '@discordjs/rest'; // Updated import
+import { Routes } from 'discord-api-types/v10'; // Updated import
+import { readFileSync } from 'fs'; // Updated import
+import { join } from 'path'; // Updated import
 
-
-const auth = JSON.parse(readFileSync(join(__dirname, '../auth.json')));
+const auth = JSON.parse(readFileSync(join(process.cwd(), 'auth.json'))); // Updated path handling
 const clientId = auth.clientId;
 const guildId = auth.guildId;
 const token = auth.token;
-
 
 const commands = [
     {
@@ -59,8 +57,9 @@ const commands = [
         ]
     },
     {
-        name: 'dndMonsters',
-        description: 'Sends back a random monster!'
+        name: 'dnd_monster',
+        description: 'Sends back a random monster!',
+        options: []
     }
 ];
 
