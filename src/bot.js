@@ -98,7 +98,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
 
         await interaction.reply(`🎱 Question: ${question}\nAnswer: ${eightballPhrases[Math.floor(Math.random() * eightballPhrases.length)]}`);
-    } else if (commandName === 'dndMonsters'){
+    } else if (commandName === 'dnd_monster'){
         const monsterResponse = await fetch('https://www.dnd5eapi.com/api/monsters');
         if (!monsterResponse.ok) {
             return message.channel.send('Monster hunter is down.');
