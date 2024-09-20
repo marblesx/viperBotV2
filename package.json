@@ -20,7 +20,8 @@
   "dependencies": {
     "@discordjs/rest": "^2.4.0",
     "discord-api-types": "^0.37.100",
-    "discord.js": "14.16.2"
+    "discord.js": "14.16.2",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@types/node": "22.5.5",

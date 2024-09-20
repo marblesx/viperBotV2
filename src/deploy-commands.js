@@ -57,6 +57,10 @@ const commands = [
                 required: true
             }
         ]
+    },
+    {
+        name: 'dndMonsters',
+        description: 'Sends back a random monster!'
     }
 ];
 
