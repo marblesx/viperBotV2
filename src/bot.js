@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Events } = require('discord.js');
+const fetch = require('node-fetch'); 
 
 const { readFileSync } = require('fs');
 const { join } = require('path');
@@ -97,6 +98,28 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
 
         await interaction.reply(`🎱 Question: ${question}\nAnswer: ${eightballPhrases[Math.floor(Math.random() * eightballPhrases.length)]}`);
+    } else if (commandName === 'dndMonsters'){
+        const monsterResponse = await fetch('https://www.dnd5eapi.com/api/monsters');
+        if (!monsterResponse.ok) {
+            return message.channel.send('Monster hunter is down.');
+        }
+        const data = await monsterResponse.json();
+        
+        const monster = data.results[Math.floor(Math.random() * data.count)];
+        const monsterData = await fetch(`https://www.dnd5eapi.com${monster.url}`);
+        if (!monsterData.ok) {
+            return message.channel.send('Monster hunter is down.');
+        }
+        const embed = new MessageEmbed()
+                .setColor('#FF0000') // Choose an appropriate color
+                .setTitle(monsterData.name)
+                .setDescription(`*${monsterData.size} ${monsterData.type} (${monsterData.alignment})*`)
+                .addField('Armor Class', monsterData.armor_class[0].value, true)
+                .addField('Hit Points',monsterData.hit_points, true)
+                .setImage(`https://www.dnd5eapi.com${monsterData.url}`)
+                .setURL(infoUrl)
+                .setFooter('More Info');
+        message.channel.send({ embeds: [embed] });
     }
 });
 
