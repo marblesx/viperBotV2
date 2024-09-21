@@ -3,7 +3,7 @@ import { Routes } from 'discord-api-types/v10'; // Updated import
 import { readFileSync } from 'fs'; // Updated import
 import { join } from 'path'; // Updated import
 
-const auth = JSON.parse(readFileSync(join(process.cwd(), 'auth.json'))); // Updated path handling
+const auth = JSON.parse(readFileSync(join(process.cwd(), '..', 'auth.json'))); // Updated path handling
 const clientId = auth.clientId;
 const guildId = auth.guildId;
 const token = auth.token;
