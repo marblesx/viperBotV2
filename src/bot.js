@@ -4,7 +4,7 @@ import fetch from 'node-fetch'; // Updated import
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-const auth = JSON.parse(readFileSync(join(process.cwd(), 'auth.json'))); 
+const auth = JSON.parse(readFileSync(join(process.cwd(), '..', 'auth.json'))); 
 const token = auth.token;
 
 const client = new Client({
