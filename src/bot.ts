@@ -2,8 +2,9 @@ import { Client, GatewayIntentBits, Events, EmbedBuilder } from 'discord.js';
 import fetch from 'node-fetch';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { startFlyersTracker, handleFlyersHighlights } from './flyers';
 
-type Auth = { token: string };
+type Auth = { token: string ,channelId?: string };
 
 let auth: Auth;
 try {
@@ -47,6 +48,8 @@ const eightballPhrases = [
 
 client.once(Events.ClientReady, () => {
   if (client.user) console.log(`Logged in as ${client.user.tag}!`);
+   if (auth.channelId) startFlyersTracker(client, auth.channelId);
+
 });
 
 client.on(Events.InteractionCreate, async (interaction: any) => {
