@@ -69,7 +69,11 @@ const commands: any[] = [
     description: 'Sends back a random monster!',
     options: [],
   },
-  { name: 'flyers_highlights', description: 'Post goals from the most recent Flyers game!', options: [] },
+  { 
+    name: 'flyers_highlights', 
+    description: 'Post goals from the most recent Flyers game!', 
+    options: [] 
+  }
 ];
 
 const rest = new REST({ version: '10' }).setToken(token);

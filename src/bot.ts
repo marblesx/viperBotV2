@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits, Events, EmbedBuilder } from 'discord.js';
 import fetch from 'node-fetch';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { startFlyersTracker, handleFlyersHighlights } from './flyers';
+import { startFlyersTracker, handleFlyersHighlights } from './flyers.js';
 
 type Auth = { token: string ,channelId?: string };
 
@@ -146,7 +146,9 @@ client.on(Events.InteractionCreate, async (interaction: any) => {
       .setFooter({ text: 'More Info' });
 
     await interaction.reply({ embeds: [embed] });
-  }
+  } else if (commandName === 'flyers_highlights') {
+  await handleFlyersHighlights(interaction);
+} 
 });
 
 client.login(token);
